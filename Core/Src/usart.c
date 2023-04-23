@@ -51,8 +51,8 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-	HAL_UART_Receive_IT(&huart1, &res, 1);
-//	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+//	HAL_UART_Receive_IT(&huart1, &res, 1);//串口接收中断测试
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -128,7 +128,7 @@ void data_process(void)//数据处理函数，完成一帧之后可进行数据处理
 	uint8_t i;
 	static uint16_t count = 0;
 	static uint32_t sum = 0;
-	for(i=0;i<12;i++)//12个点取平均
+	for(i=0;i<6;i++)//6个点取平均
 	{
 		if(Pack_Data.point[i].distance != 0)//去除0的点
 		{
@@ -136,7 +136,7 @@ void data_process(void)//数据处理函数，完成一帧之后可进行数据处理
 			sum += Pack_Data.point[i].distance;
 		}
 	}
-	if(++cnt == 100)//100个数据帧计算一次距离
+	if(++cnt == 50)//100个数据帧计算一次距离
 	{
 		distance = sum/count;
 		sum = 0;
@@ -158,7 +158,7 @@ int fgetc(FILE *f)
 	return (ch);
 }
 
-
+//以下为串口测试代码
 struct rx_array rx_array1={{'0','0','0','0','0','0'},0,0,0};
 /**
   * @brief  转化串口输入的char为int
